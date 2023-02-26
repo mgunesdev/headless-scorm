@@ -1,13 +1,14 @@
 <?php
 namespace EscolaLms\Scorm\Repositories;
 
+use EscolaLms\Core\Repositories\BaseRepository;
 use EscolaLms\Scorm\Repositories\Contracts\ScormRepositoryContract;
 use Illuminate\Support\Facades\DB;
 use PDO;
 use Peopleaps\Scorm\Model\ScormModel;
 use Illuminate\Database\Eloquent\Builder;
 
-class ScormRepository implements ScormRepositoryContract
+class ScormRepository extends BaseRepository implements ScormRepositoryContract
 {
     public function getFieldsSearchable(): array
     {
