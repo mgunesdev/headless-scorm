@@ -3,14 +3,17 @@
 
 namespace EscolaLms\Scorm\Http\Controllers;
 
-
-use App\Http\Controllers\Admin\Controller as Controller;
-use Illuminate\Http\JsonResponse;
-use function App\Http\Controllers\Api\V1\response;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Foundation\Bus\DispatchesJobs;
+use Illuminate\Foundation\Validation\ValidatesRequests;
+use Illuminate\Routing\Controller as Controller;
+use Illuminate\Http\JsonResponse;;
 
 
 class BaseController extends Controller
 {
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+
     /**
      * success response method.
      *
@@ -51,6 +54,6 @@ class BaseController extends Controller
         }
 
 
-        return response()->json($response, $code);
+        return $response->json($response, $code);
     }
 }
