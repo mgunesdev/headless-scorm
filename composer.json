@@ -3,7 +3,7 @@
     "description": "Escola LMS SCORM management",
     "type": "package",
     "require": {
-        "devianl2/laravel-scorm": "^3.0",
+        "devianl2/laravel-scorm": "^4.0",
         "laravel/framework": ">=9.0"
     },
     "require-dev": {
