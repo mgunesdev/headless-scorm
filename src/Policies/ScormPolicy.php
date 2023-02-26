@@ -11,12 +11,14 @@ class ScormPolicy
 {
     public function list(User $user): bool
     {
-        return $user->can(ScormPermissionsEnum::SCORM_LIST);
+//        return $user->can(ScormPermissionsEnum::SCORM_LIST);
+        return true;
     }
 
     public function read(User $user): bool
     {
-        return $user->can(ScormPermissionsEnum::SCORM_READ);
+//        return $user->can(ScormPermissionsEnum::SCORM_READ);
+        return true;
     }
 
     /**
@@ -25,7 +27,8 @@ class ScormPolicy
      */
     public function create(User $user): bool
     {
-        return $user->can(ScormPermissionsEnum::SCORM_CREATE);
+//        return $user->can(ScormPermissionsEnum::SCORM_CREATE);
+        return true;
     }
 
     /**
@@ -35,7 +38,8 @@ class ScormPolicy
      */
     public function delete(User $user, ScormModel $scorm): bool
     {
-        return $user->can(ScormPermissionsEnum::SCORM_DELETE);
+//        return $user->can(ScormPermissionsEnum::SCORM_DELETE);
+        return true;
     }
 
     /**
@@ -45,6 +49,7 @@ class ScormPolicy
      */
     public function update(User $user, ScormModel $scorm): bool
     {
-        return $user->can(ScormPermissionsEnum::SCORM_UPDATE);
+//        return $user->can(ScormPermissionsEnum::SCORM_UPDATE);
+        return true;
     }
 }
