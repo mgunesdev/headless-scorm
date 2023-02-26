@@ -1,7 +1,6 @@
 <?php
 namespace EscolaLms\Scorm\Repositories;
 
-use EscolaLms\Core\Repositories\BaseRepository;
 use EscolaLms\Scorm\Repositories\Contracts\ScormRepositoryContract;
 use Illuminate\Support\Facades\DB;
 use PDO;
