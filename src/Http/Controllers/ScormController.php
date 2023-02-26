@@ -6,7 +6,6 @@ use EscolaLms\Scorm\Http\Controllers\Swagger\ScormControllerContract;
 use EscolaLms\Scorm\Http\Requests\ScormDeleteRequest;
 use EscolaLms\Scorm\Services\Contracts\ScormQueryServiceContract;
 use EscolaLms\Scorm\Services\Contracts\ScormServiceContract;
-use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use Exception;
 use EscolaLms\Scorm\Http\Requests\ScormCreateRequest;
 use EscolaLms\Scorm\Http\Requests\ScormListRequest;
@@ -15,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Peopleaps\Scorm\Model\ScormModel;
 
-class ScormController extends EscolaLmsBaseController implements ScormControllerContract
+class ScormController extends BaseController implements ScormControllerContract
 {
     private ScormServiceContract $scormService;
 

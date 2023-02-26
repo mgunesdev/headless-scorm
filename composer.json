@@ -1,13 +1,10 @@
 {
-    "name": "escolalms/scorm",
+    "name": "alsay/headless-scorm",
     "description": "Escola LMS SCORM management",
     "type": "package",
     "require": {
-        "php": ">=7.4",
-        "devianl2/laravel-scorm": "^2.0",
-        "laravel/framework": ">=8.0",
-        "escolalms/core": "^1",
-        "escolalms/auth": "^0"
+        "devianl2/laravel-scorm": "^3.0",
+        "laravel/framework": ">=9.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.0",

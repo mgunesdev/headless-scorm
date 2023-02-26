@@ -2,7 +2,6 @@
 
 namespace EscolaLms\Scorm\Http\Controllers;
 
-use EscolaLms\Core\Http\Controllers\EscolaLmsBaseController;
 use EscolaLms\Scorm\Http\Controllers\Swagger\ScormTrackControllerContract;
 use EscolaLms\Scorm\Http\Requests\GetScormTrackRequest;
 use EscolaLms\Scorm\Http\Requests\SetScormTrackRequest;
@@ -10,7 +9,7 @@ use EscolaLms\Scorm\Services\Contracts\ScormTrackServiceContract;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
-class ScormTrackController extends EscolaLmsBaseController implements ScormTrackControllerContract
+class ScormTrackController extends BaseController implements ScormTrackControllerContract
 {
     /** @var ScormTrackServiceContract */
     private ScormTrackServiceContract $scormTrackService;

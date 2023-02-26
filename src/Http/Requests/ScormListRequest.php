@@ -2,7 +2,7 @@
 
 namespace EscolaLms\Scorm\Http\Requests;
 
-use EscolaLms\Core\Models\User;
+use App\Models\User;
 use EscolaLms\Scorm\Enums\ScormPermissionsEnum;
 use Illuminate\Foundation\Http\FormRequest;
 

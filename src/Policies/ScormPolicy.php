@@ -2,15 +2,13 @@
 
 namespace EscolaLms\Scorm\Policies;
 
-use EscolaLms\Auth\Models\User;
+use App\Models\User;
 use EscolaLms\Scorm\Enums\ScormPermissionsEnum;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Peopleaps\Scorm\Model\ScormModel;
 
 class ScormPolicy
 {
-    use HandlesAuthorization;
-
     public function list(User $user): bool
     {
         return $user->can(ScormPermissionsEnum::SCORM_LIST);

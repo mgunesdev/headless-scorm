@@ -4,8 +4,6 @@ namespace EscolaLms\Scorm\Services;
 
 use Carbon\Carbon;
 use EscolaLms\Scorm\Services\Contracts\ScormTrackServiceContract;
-use EscolaLms\Scorm\Strategies\Scorm12FieldStrategy;
-use EscolaLms\Scorm\Strategies\Scorm2004FieldStrategy;
 use EscolaLms\Scorm\Strategies\ScormFieldStrategy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Str;
