@@ -377,10 +377,10 @@ class ScormService implements ScormServiceContract
             ->url('scorm/' . $data->scorm->version . '/' . $data->scorm->uuid . '/' . $data->entry_url . $data->sco_parameters);
         $data['version'] = $data->scorm->version;
         $data['token'] = $token;
-        $data['lmsUrl'] = url('/api/scorm/track');
+        $data['lmsUrl'] = url('/api/v1/scorm/track');
         $data['player'] = (object)[
             'autoCommit' => (bool)$token,
-            'lmsCommitUrl' => $token ? url('/api/scorm/track', $data->uuid) : false,
+            'lmsCommitUrl' => $token ? url('/api/v1/scorm/track', $data->uuid) : false,
             'xhrHeaders' => [
                 'Authorization' => $token ? ('Bearer ' . $token) : null
             ],
