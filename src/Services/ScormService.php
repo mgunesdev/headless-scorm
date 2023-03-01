@@ -22,6 +22,9 @@ use Ramsey\Uuid\Uuid;
 use ZipArchive;
 use EscolaLms\Scorm\Services\Contracts\ScormServiceContract;
 
+use App\Models\Content;;
+use Illuminate\Support\Facades\Session;
+
 class ScormService implements ScormServiceContract
 {
     /** @var ScormLib */
@@ -67,6 +70,7 @@ class ScormService implements ScormServiceContract
             $scorm->save();
 
             $this->saveToDb($scormData['scos'], $scorm);
+            $this->contentMapping($scormData['scos'][0]->uuid);
         }
 
         return [
@@ -386,5 +390,22 @@ class ScormService implements ScormServiceContract
         ];
 
         return $data;
+    }
+
+    /**
+     * @param string $uuid
+     * @return void
+     */
+    private function contentMapping(string $uuid): void
+    {
+        $appContentId = Session::get('contentId');
+        if ($appContentId) {
+            $apiContent = Content::find($appContentId);
+            $apiContent->update([
+                'value' => $uuid
+            ]);
+            Session::remove('contentId');
+            Session::put('contentRedirectUrl', '/content/list?create-success=true');
+        }
     }
 }

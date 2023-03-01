@@ -40,7 +40,8 @@ class ScormController extends BaseController
             return $this->sendError($error->getMessage(), 422);
         }
 
-        return $this->sendResponse($data, "Scorm Package uploaded successfully");
+        return redirect()->route('content.index')->with('success', 'İçerik Oluşturuldu');
+//        return $this->sendResponse($data, "Scorm Package uploaded successfully");
     }
 
     public function parse(Request $request): JsonResponse
@@ -66,6 +67,17 @@ class ScormController extends BaseController
         );
 
         return view('scorm::player', ['data' => $data]);
+    }
+
+    public function showConfig(string $uuid, Request $request): JsonResponse
+    {
+        $data = $this->scormService->getScoViewDataByUuid(
+            $uuid,
+            $request->user() ? $request->user()->getKey() : null,
+            $request->bearerToken()
+        );
+
+        return $this->sendResponse($data);
     }
 
     public function index(ScormListRequest $request): JsonResponse
