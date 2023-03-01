@@ -14,7 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Peopleaps\Scorm\Model\ScormModel;
 
-class ScormController extends BaseController implements ScormControllerContract
+class ScormController extends BaseController
 {
     private ScormServiceContract $scormService;
 
@@ -29,7 +29,7 @@ class ScormController extends BaseController implements ScormControllerContract
         $this->scormQueryService = $scormQueryService;
     }
 
-    public function upload(ScormCreateRequest $request): JsonResponse
+    public function upload(Request $request): JsonResponse
     {
         $file = $request->file('zip');
 
@@ -43,7 +43,7 @@ class ScormController extends BaseController implements ScormControllerContract
         return $this->sendResponse($data, "Scorm Package uploaded successfully");
     }
 
-    public function parse(ScormCreateRequest $request): JsonResponse
+    public function parse(Request $request): JsonResponse
     {
         $file = $request->file('zip');
 

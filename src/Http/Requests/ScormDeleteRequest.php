@@ -2,8 +2,6 @@
 
 namespace EscolaLms\Scorm\Http\Requests;
 
-use App\Models\User;
-use EscolaLms\Scorm\Enums\ScormPermissionsEnum;
 use Illuminate\Foundation\Http\FormRequest;
 
 class ScormDeleteRequest extends FormRequest
