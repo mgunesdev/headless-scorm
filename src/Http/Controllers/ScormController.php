@@ -10,6 +10,7 @@ use Exception;
 use EscolaLms\Scorm\Http\Requests\ScormCreateRequest;
 use EscolaLms\Scorm\Http\Requests\ScormListRequest;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Peopleaps\Scorm\Model\ScormModel;
@@ -29,7 +30,7 @@ class ScormController extends BaseController
         $this->scormQueryService = $scormQueryService;
     }
 
-    public function upload(Request $request): JsonResponse
+    public function upload(Request $request): RedirectResponse
     {
         $file = $request->file('zip');
 
@@ -37,7 +38,8 @@ class ScormController extends BaseController
             $data = $this->scormService->uploadScormArchive($file);
             $data = $this->scormService->removeRecursion($data);
         } catch (Exception $error) {
-            return $this->sendError($error->getMessage(), 422);
+            return redirect()->back()->with('danger', 'İçerik Oluşturulurken Bir Hata Oluştu!');
+//            return $this->sendError($error->getMessage(), 422);
         }
 
         return redirect()->route('content.index')->with('success', 'İçerik Oluşturuldu');
