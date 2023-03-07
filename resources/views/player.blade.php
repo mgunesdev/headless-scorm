@@ -34,7 +34,6 @@
 
         window.API.on('LMSGetValue.cmi.*', function(CMIElement) {
             get(CMIElement)
-                .then(res => res.json())
                 .then(res => {
                     window.API.LMSSetValue(CMIElement, res)
                 })
