@@ -32,11 +32,14 @@
             post(data);
         });
 
-        window.API.on('LMSGetValue.cmi.*', function(CMIElement) {
-            get(CMIElement)
-                .then(res => {
-                    window.API.LMSSetValue(CMIElement, res)
-                })
+        window.API.on('LMSGetValue.cmi.*', function(CMIElement, value) {
+            const data = {
+                cmi: {
+                    [CMIElement]: value
+                }
+            }
+
+            post(data);
         });
 
         window.API.on('LMSCommit', function() {
