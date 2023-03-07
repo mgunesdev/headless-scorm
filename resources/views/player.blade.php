@@ -32,7 +32,7 @@
             post(data);
         });
 
-        window.API.on('LMSGetValue.cmi.core.student_name', function(e) {
+        window.API.on('LMSGetValue.cmi.cmi.core.score.max', function(e) {
             console.log(e);
 
             // post(data);
@@ -50,6 +50,9 @@
     function post(data) {
         console.log("Post Request");
         console.log(data);
+        console.log("Token");
+        console.log(token);
+
         if (!token) {
             return;
         }
