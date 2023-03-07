@@ -32,14 +32,10 @@
             post(data);
         });
 
-        window.API.on('LMSGetValue.cmi.*', function(CMIElement, value) {
-            const data = {
-                cmi: {
-                    [CMIElement]: value
-                }
-            }
+        window.API.on('LMSGetValue.cmi.core.student_name', function(e) {
+            console.log(e);
 
-            post(data);
+            // post(data);
         });
 
         window.API.on('LMSCommit', function() {
