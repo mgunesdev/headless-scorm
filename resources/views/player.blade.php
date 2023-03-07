@@ -52,9 +52,17 @@
     }
 
     function post(data) {
+        console.log("Post Request");
+        console.log(data);
         if (!token) {
             return;
         }
+
+        console.log("Token");
+        console.log(token);
+        console.log("Url");
+        console.log(settings.lmsUrl + '/' + settings.uuid);
+
 
         fetch(settings.lmsUrl + '/' + settings.uuid, {
             method: 'POST',
@@ -65,6 +73,8 @@
             },
             body: JSON.stringify(data)
         });
+
+        console.log("Finished");
     }
 
     function get(key) {
