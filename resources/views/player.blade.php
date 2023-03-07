@@ -17,9 +17,6 @@
     if (settings.version === 'scorm_12') {
         scorm12();
     }
-    else if (settings.version === 'scorm_2004') {
-        scorm2004();
-    }
 
     function scorm12() {
         window.API = new Scorm12API(settings.player);
@@ -35,48 +32,17 @@
             post(data);
         });
 
-        // window.API.on('LMSGetValue.cmi.*', function(CMIElement) {
-        //     get(CMIElement)
-        //         .then(res => res.json())
-        //         .then(res => {
-        //             window.API.LMSSetValue(CMIElement, res)
-        //         })
-        // });
+        window.API.on('LMSGetValue.cmi.*', function(CMIElement) {
+            get(CMIElement)
+                .then(res => res.json())
+                .then(res => {
+                    window.API.LMSSetValue(CMIElement, res)
+                })
+        });
 
         window.API.on('LMSCommit', function() {
             const data = {
                 cmi: window.API.cmi
-            }
-
-            post(data);
-        });
-    }
-
-    function scorm2004() {
-        window.API_1484_11 = new Scorm2004API(settings.player);
-        window.API_1484_11.loadFromJSON(cmi);
-
-        window.API_1484_11.on('SetValue.cmi.*', function(CMIElement, value) {
-            const data = {
-                cmi: {
-                    [CMIElement]: value
-                }
-            }
-
-            post(data);
-        });
-
-        // window.API_1484_11.on('GetValue.cmi.*', function(CMIElement) {
-        //     get(CMIElement)
-        //         .then(res => res.json())
-        //         .then(res => {
-        //             window.API_1484_11.SetValue(CMIElement, res)
-        //         });
-        // });
-
-        window.API_1484_11.on('Commit', function() {
-            const data = {
-                cmi: window.API_1484_11.cmi
             }
 
             post(data);
