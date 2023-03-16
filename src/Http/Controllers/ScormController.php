@@ -38,7 +38,7 @@ class ScormController extends BaseController
             $data = $this->scormService->uploadScormArchive($file);
             $data = $this->scormService->removeRecursion($data);
         } catch (Exception $error) {
-            return redirect()->route('html5.upload.step_2')->with('danger', 'İçerik Yüklenirken Bir Hata Oluştu!');
+            return redirect()->route('html5.upload.step_2')->with('danger', 'İçerik Scorm İle Uyumlu Değil!');
 //            return $this->sendError($error->getMessage(), 422);
         }
 
