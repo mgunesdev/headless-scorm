@@ -231,7 +231,7 @@ class ScormService implements ScormServiceContract
         }
 
         $zip->extractTo(Storage::disk(config('scorm.disk'))->path($hashName));
-        Storage::disk("cdn")->put($hashName, file_get_contents($hashName));
+        Storage::disk("cdn")->put($hashName, file_get_contents('storage/app/public/'.$hashName));
         //Storage::disk("public")->delete($hashName);
         $zip->close();
     }
