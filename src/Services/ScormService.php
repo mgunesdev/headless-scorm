@@ -231,6 +231,8 @@ class ScormService implements ScormServiceContract
         }
 
         $zip->extractTo(Storage::disk(config('scorm.disk'))->path($hashName));
+        Storage::disk("cdn")->put($hashName, file_get_contents($hashName));
+        //Storage::disk("public")->delete($hashName);
         $zip->close();
     }
 
@@ -251,7 +253,16 @@ class ScormService implements ScormServiceContract
             throw new StorageNotFoundException();
         }
 
-        Storage::disk(config('scorm.disk'))->putFileAs($scormFilePath, $file, $hashFileName);
+        $message = [
+          'config_disc' =>  config('scorm.disk'),
+          'config_root' =>  config('filesystems.disks.' . config('scorm.disk') . '.root'),
+          'file_path' =>  $scormFilePath,
+          'hash_name' =>  $hashFileName,
+        ];
+
+        \Log::info("Scorm Zip Fİle : " . json_encode($message));
+
+        //Storage::disk(config('scorm.disk'))->putFileAs($scormFilePath, $file, $hashFileName);
 
         return [
             'name' => $hashFileName, // to follow standard file data format
