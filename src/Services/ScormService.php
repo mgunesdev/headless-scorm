@@ -231,8 +231,13 @@ class ScormService implements ScormServiceContract
         }
 
         $zip->extractTo(Storage::disk(config('scorm.disk'))->path($hashName));
-//        Storage::disk("cdn")->put($hashName, file_get_contents(Storage::disk("public")->path($hashName)));
-        //Storage::disk("public")->delete($hashName);
+
+        $fromFiles = Storage::disk(config('scorm.disk'))->allFiles($hashName);
+        foreach ($fromFiles as $filePath) {
+            Storage::disk("cdn")->put('/'. $filePath, Storage::disk("public")->get($filePath));
+        }
+
+        Storage::disk(config('scorm.disk'))->deleteDirectory($hashName);
         $zip->close();
     }
 
@@ -384,8 +389,13 @@ class ScormService implements ScormServiceContract
     private function getScormPlayerConfig(ScormScoModel $data, ?int $userId = null, ?string $token = null): ScormScoModel
     {
         $cmi = $this->getScormTrackData($data, $userId);
-        $data['entry_url_absolute'] = Storage::disk(config('scorm.disk'))
-            ->url('scorm/' . $data->scorm->version . '/' . $data->scorm->uuid . '/' . $data->entry_url . $data->sco_parameters);
+
+        $entityUrl = 'scorm/' . $data->scorm->version . '/' . $data->scorm->uuid . '/' . $data->entry_url . $data->sco_parameters;
+        $data['entry_url_absolute'] = Storage::disk(config('scorm.disk'))->url($entityUrl);
+        if (config('filesystems.default') === 'cdn') {
+            $data['entry_url_absolute'] = config('filesystems.ftp_public_path') . $entityUrl;
+        }
+
         $data['version'] = $data->scorm->version;
         $data['token'] = $token;
         $data['lmsUrl'] = url('/api/v1/scorm/track');
