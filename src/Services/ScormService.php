@@ -207,7 +207,7 @@ class ScormService implements ScormServiceContract
      */
     protected function deleteScormFolder(string $version, string $folderHashedName): bool
     {
-        return Storage::disk(config('scorm.disk'))
+        return Storage::disk('public')
             ->deleteDirectory('scorm' . DIRECTORY_SEPARATOR . $version . DIRECTORY_SEPARATOR . $folderHashedName);
     }
 
@@ -222,22 +222,25 @@ class ScormService implements ScormServiceContract
         $zip = new \ZipArchive();
         $zip->open($file);
 
-        if (!config()->has('filesystems.disks.' . config('scorm.disk') . '.root')) {
+        if (!config()->has('filesystems.disks.' . 'public' . '.root')) {
             throw new StorageNotFoundException();
         }
 
-        if (!Storage::disk(config('scorm.disk'))->exists($hashName)) {
-            Storage::disk(config('scorm.disk'))->makeDirectory($hashName);
+        if (!Storage::disk('public')->exists($hashName)) {
+            Storage::disk('public')->makeDirectory($hashName);
         }
 
-        $zip->extractTo(Storage::disk(config('scorm.disk'))->path($hashName));
+        $zip->extractTo(Storage::disk('public')->path($hashName));
 
-        $fromFiles = Storage::disk(config('scorm.disk'))->allFiles($hashName);
-        foreach ($fromFiles as $filePath) {
-            Storage::disk("cdn")->put('/'. $filePath, Storage::disk("public")->get($filePath));
+        if (config('filesystems.default_upload_driver') === 'cdn') {
+            $fromFiles = Storage::disk('public')->allFiles($hashName);
+            foreach ($fromFiles as $filePath) {
+                Storage::disk("cdn")->put('/'. $filePath, Storage::disk("public")->get($filePath));
+            }
+
+            Storage::disk('public')->deleteDirectory($hashName);
         }
 
-        Storage::disk(config('scorm.disk'))->deleteDirectory($hashName);
         $zip->close();
     }
 
@@ -254,20 +257,20 @@ class ScormService implements ScormServiceContract
         $scormFilePath = 'scorm/' . $scormData['version'] . '/' . $hashName;
         $this->unzipScormArchive($file, $scormFilePath);
 
-        if (!config()->has('filesystems.disks.' . config('scorm.disk') . '.root')) {
+        if (!config()->has('filesystems.disks.' . 'public' . '.root')) {
             throw new StorageNotFoundException();
         }
 
         $message = [
-          'config_disc' =>  config('scorm.disk'),
-          'config_root' =>  config('filesystems.disks.' . config('scorm.disk') . '.root'),
+          'config_disc' =>  'public',
+          'config_root' =>  config('filesystems.disks.' . 'public' . '.root'),
           'file_path' =>  $scormFilePath,
           'hash_name' =>  $hashFileName,
         ];
 
         \Log::info("Scorm Zip Fİle : " . json_encode($message));
 
-        //Storage::disk(config('scorm.disk'))->putFileAs($scormFilePath, $file, $hashFileName);
+        //Storage::disk('public')->putFileAs($scormFilePath, $file, $hashFileName);
 
         return [
             'name' => $hashFileName, // to follow standard file data format
@@ -321,7 +324,7 @@ class ScormService implements ScormServiceContract
         $scormPath = 'scorm' . DIRECTORY_SEPARATOR . $scorm->version . DIRECTORY_SEPARATOR . $scorm->hash_name;
         $scormFilePath = $scormPath . DIRECTORY_SEPARATOR . $scorm->hash_name . '.zip';
 
-        if (Storage::disk('local')->exists($scormFilePath)) {
+        if (Storage::disk('public')->exists($scormFilePath)) {
             return $scormFilePath;
         }
 
@@ -330,18 +333,18 @@ class ScormService implements ScormServiceContract
 
     public function zipScormFiles(ScormModel $scorm): string
     {
-        $scormDisk = Storage::disk(config('scorm.disk'));
+        $scormDisk = Storage::disk('public');
         $scormPath = 'scorm' . DIRECTORY_SEPARATOR . $scorm->version . DIRECTORY_SEPARATOR . $scorm->hash_name;
         $scormFilePath = $scormPath . DIRECTORY_SEPARATOR . $scorm->hash_name . '.zip';
         $files = array_filter($scormDisk->allFiles($scormPath), fn($item) => $item !== $scormFilePath);
 
-        if (!Storage::disk('local')->exists('scorm/exports')) {
-            Storage::disk('local')->makeDirectory('scorm/exports');
+        if (!Storage::disk('public')->exists('scorm/exports')) {
+            Storage::disk('public')->makeDirectory('scorm/exports');
         }
 
         $zip = new \ZipArchive();
         $zipFilePath = 'scorm/exports/' . uniqid(rand(), true) . $scorm->hash_name . '.zip';
-        $zipFile = Storage::disk('local')->path($zipFilePath);
+        $zipFile = Storage::disk('public')->path($zipFilePath);
 
         if (!$zip->open($zipFile, ZipArchive::CREATE | ZipArchive::OVERWRITE)) {
             throw new \Exception("Zip file could not be created: " . $zip->getStatusString());
@@ -391,8 +394,8 @@ class ScormService implements ScormServiceContract
         $cmi = $this->getScormTrackData($data, $userId);
 
         $entityUrl = 'scorm/' . $data->scorm->version . '/' . $data->scorm->uuid . '/' . $data->entry_url . $data->sco_parameters;
-        $data['entry_url_absolute'] = Storage::disk(config('scorm.disk'))->url($entityUrl);
-        if (config('filesystems.default') === 'cdn') {
+        $data['entry_url_absolute'] = Storage::disk('public')->url($entityUrl);
+        if (config('filesystems.default_upload_driver') === 'cdn') {
             $data['entry_url_absolute'] = config('filesystems.ftp_public_path') . $entityUrl;
         }
 

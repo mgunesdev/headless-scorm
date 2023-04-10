@@ -72,7 +72,7 @@ class ScormAdminApiTest extends TestCase
         $response = $this->actingAs($this->user, 'api')->json('DELETE', '/api/admin/scorm/' . $model->id);
 
         $response->assertOk();
-        $this->assertFalse(Storage::disk(config('scorm.disk'))->exists($path));
+        $this->assertFalse(Storage::disk('public')->exists($path));
         $this->assertDatabaseMissing('scorm', [
             'id' => $model->id,
             'uuid' => $model->uuid,
