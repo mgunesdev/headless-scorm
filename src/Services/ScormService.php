@@ -460,7 +460,8 @@ class ScormService implements ScormServiceContract
         if ($appContentId) {
             $apiContent = Content::find($appContentId);
             $apiContent->update([
-                'value' => $uuid
+                'value' => $uuid,
+                'release_status' => 2
             ]);
             Session::remove('contentId');
             Session::put('contentRedirectUrl', '/content/list?create-success=true');
