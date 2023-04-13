@@ -232,14 +232,14 @@ class ScormService implements ScormServiceContract
 
         $zip->extractTo(Storage::disk('public')->path($hashName));
 
-        if (config('filesystems.default_upload_driver') === 'cdn') {
-            $fromFiles = Storage::disk('public')->allFiles($hashName);
-            foreach ($fromFiles as $filePath) {
-                Storage::disk("cdn")->put('/'. $filePath, Storage::disk("public")->get($filePath));
-            }
-
-            Storage::disk('public')->deleteDirectory($hashName);
-        }
+//        if (config('filesystems.default_upload_driver') === 'cdn') {
+//            $fromFiles = Storage::disk('public')->allFiles($hashName);
+//            foreach ($fromFiles as $filePath) {
+//                Storage::disk("cdn")->put('/'. $filePath, Storage::disk("public")->get($filePath));
+//            }
+//
+//            Storage::disk('public')->deleteDirectory($hashName);
+//        }
 
         $zip->close();
     }
@@ -316,6 +316,20 @@ class ScormService implements ScormServiceContract
     {
         $data = $this->getScoByUuid($scoUuid);
         return $this->getScormPlayerConfig($data, $userId, $token);
+    }
+
+
+    /**
+     * Get sco data to view by uuid
+     * @param string $scoUuid
+     * @param int|null $userId
+     * @param string|null $token
+     * @return ScormScoModel
+     */
+    public function getScoDataByUuid(string $scoUuid, ?int $userId = null, ?string $token = null): ScormScoModel
+    {
+        $data = $this->getScoByUuid($scoUuid);
+        return $this->getScormPlayerApiConfig($data, $userId, $token);
     }
 
     public function zipScorm(int $id): string
@@ -395,9 +409,29 @@ class ScormService implements ScormServiceContract
 
         $entityUrl = 'scorm/' . $data->scorm->version . '/' . $data->scorm->uuid . '/' . $data->entry_url . $data->sco_parameters;
         $data['entry_url_absolute'] = Storage::disk('public')->url($entityUrl);
-        if (config('filesystems.default_upload_driver') === 'cdn') {
-            $data['entry_url_absolute'] = config('filesystems.ftp_public_path') . $entityUrl;
-        }
+
+        $data['version'] = $data->scorm->version;
+        $data['token'] = $token;
+        $data['lmsUrl'] = url('/api/v1/scorm/track');
+        $data['player'] = (object)[
+            'autoCommit' => (bool)$token,
+            'lmsCommitUrl' => $token ? url('/api/v1/scorm/track', $data->uuid) : false,
+            'xhrHeaders' => [
+                'Authorization' => $token ? ('Bearer ' . $token) : null
+            ],
+            'logLevel' => 1,
+            'autoProgress' => (bool)$token,
+            'cmi' => $cmi,
+        ];
+
+        return $data;
+    }
+    private function getScormPlayerApiConfig(ScormScoModel $data, ?int $userId = null, ?string $token = null): ScormScoModel
+    {
+        $cmi = $this->getScormTrackData($data, $userId);
+
+        $entityUrl = 'scorm/' . $data->scorm->version . '/' . $data->scorm->uuid . '/' . $data->entry_url . $data->sco_parameters;
+        $data['entry_url_absolute'] = config('filesystems.ftp_public_path') . $entityUrl;
 
         $data['version'] = $data->scorm->version;
         $data['token'] = $token;

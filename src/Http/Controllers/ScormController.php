@@ -73,7 +73,7 @@ class ScormController extends BaseController
 
     public function showConfig(string $uuid, Request $request): JsonResponse
     {
-        $data = $this->scormService->getScoViewDataByUuid(
+        $data = $this->scormService->getScoDataByUuid(
             $uuid,
             $request->user() ? $request->user()->getKey() : null,
             $request->bearerToken()
